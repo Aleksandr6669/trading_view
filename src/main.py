@@ -89,7 +89,7 @@ if df['entry'].iloc[-1]:
     log_output = ft.Text()
 
     def run_bot():
-        nonlocal bot_running
+        global bot_running
         while bot_running:
             try:
                 df = load_klines(
