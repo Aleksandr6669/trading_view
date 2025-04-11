@@ -130,7 +130,7 @@ if df['entry'].iloc[-1]:
             time.sleep(60)
 
     def start_bot(e):
-        nonlocal bot_thread, bot_running
+        global bot_thread, bot_running
         if not bot_running:
             bot_running = True
             bot_thread = threading.Thread(target=run_bot)
@@ -139,7 +139,7 @@ if df['entry'].iloc[-1]:
             page.update()
 
     def stop_bot(e):
-        nonlocal bot_running
+        global bot_running
         bot_running = False
         status_text.value = "Бот остановлен"
         page.update()
