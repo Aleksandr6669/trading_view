@@ -9,9 +9,6 @@ import time
 import requests
 
 client = Client()
-bot_thread = None
-bot_running = False
-
 
 def load_klines(symbol="BTCUSDT", interval="1h", limit=200):
     klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
@@ -52,10 +49,14 @@ def build_plot(df, plot_columns, mark_condition=None):
 
 
 def main(page: ft.Page):
-    page.title = "Торговый бот (браузер + фон)"
+    page.title = "Торговый бот (на каждый браузер — своя логика)"
     page.scroll = ft.ScrollMode.ALWAYS
 
-    # UI
+    # <<< Переменные живут внутри main >>>
+    bot_running = False
+    bot_thread = None
+
+    # Интерфейс
     symbol_input = ft.TextField(label="Монета", value="BTCUSDT", width=150)
     interval_input = ft.TextField(label="Таймфрейм", value="1h", width=100)
     limit_input = ft.TextField(label="Свечей", value="200", width=100)
@@ -88,8 +89,9 @@ if df['entry'].iloc[-1]:
     graph_img = ft.Image()
     log_output = ft.Text()
 
+    # <<< Вложенный бот, использует nonlocal >>>
     def run_bot():
-        global bot_running
+        nonlocal bot_running
         while bot_running:
             try:
                 df = load_klines(
@@ -118,10 +120,8 @@ if df['entry'].iloc[-1]:
                 with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmpfile:
                     fig.write_image(tmpfile.name, format="png", width=1000, height=600)
                     graph_img.src = tmpfile.name
+                    log_output.value = f"Выполнено успешно: {time.strftime('%H:%M:%S')}"
                     page.update()
-
-                log_output.value = f"Выполнено успешно: {time.strftime('%H:%M:%S')}"
-                page.update()
 
             except Exception as ex:
                 log_output.value = f"Ошибка: {str(ex)}"
@@ -130,7 +130,7 @@ if df['entry'].iloc[-1]:
             time.sleep(60)
 
     def start_bot(e):
-        global bot_thread, bot_running
+        nonlocal bot_running, bot_thread
         if not bot_running:
             bot_running = True
             bot_thread = threading.Thread(target=run_bot)
@@ -139,11 +139,12 @@ if df['entry'].iloc[-1]:
             page.update()
 
     def stop_bot(e):
-        global bot_running
+        nonlocal bot_running
         bot_running = False
         status_text.value = "Бот остановлен"
         page.update()
 
+    # Отображение
     page.add(
         ft.Row([
             symbol_input, interval_input, limit_input,
@@ -155,5 +156,6 @@ if df['entry'].iloc[-1]:
         graph_img,
         log_output
     )
+
 
 ft.app(target=main)
