@@ -13,7 +13,8 @@ dependencies = [
   "pandas_ta",
   "plotly",
   "python-binance",
-  "requests"
+  "requests",
+  "kaleido",
 ]
 
 [tool.flet]

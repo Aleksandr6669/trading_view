@@ -67,7 +67,7 @@ def load_klines(symbol, interval, limit, market_type):
     df[["open", "high", "low", "close", "volume"]] = df[["open", "high", "low", "close", "volume"]].astype(float)
     return df
 
-def build_plot_advanced(df, plot_columns, mark_condition=None):
+def build_plot_advanced(df, plot_columns, mark_condition=None, comments=None):
     panel_map = {}
     for col in plot_columns:
         match = re.match(r"@?([\w_]+)(?::(\d+))?", col.strip())
@@ -149,6 +149,21 @@ def build_plot_advanced(df, plot_columns, mark_condition=None):
             name="SELL",
             marker=dict(color="red", symbol="triangle-down", size=12)
         ), row=1, col=1)
+    
+    if comments:
+        for panel, text in comments.items():
+            if text:
+                fig.add_annotation(
+                    text=text,
+                    xref="paper", yref=f"y{panel if panel > 1 else ''} domain",
+                    x=0, y=0,
+                    showarrow=False,
+                    align="left",
+                    font=dict(size=12, color="black"),
+                    bgcolor="rgba(255,255,255,0.6)",
+                    bordercolor="black",
+                    borderwidth=1,
+                )
 
     timestamps = df["timestamp"]
     if len(timestamps) > 3:
@@ -237,9 +252,9 @@ def main(page: ft.Page):
             try:
                 df = load_klines(symbol.value, interval.value, int(limit.value), market.value)
                 local_vars = {"df": df.copy(), "ta": ta, "pd": pd, "requests": requests,
-                              "plot_columns": [], "mark_condition": None}
+                              "plot_columns": [], "mark_condition": None, "comments": {} }
                 exec(code.value, {}, local_vars)
-                fig = build_plot_advanced(local_vars["df"], local_vars["plot_columns"], local_vars["mark_condition"])
+                fig = build_plot_advanced(local_vars["df"], local_vars["plot_columns"], local_vars["mark_condition"], local_vars["comments"])
                 chart.figure = fig
                 log.value = f"Обновлено: {time.strftime('%H:%M:%S')}"
                 page.update()
@@ -274,8 +289,8 @@ def main(page: ft.Page):
 
     page.add(
         ft.Row([
-            ft.Container(ft.Column([code], scroll=ft.ScrollMode.AUTO), expand=1, height=650, padding=10),
-            ft.Container(ft.Column([chart, log], scroll=ft.ScrollMode.AUTO), expand=2, height=650, padding=10)
+            ft.Container(ft.Column([code], scroll=ft.ScrollMode.AUTO), expand=1, padding=10),
+            ft.Container(ft.Column([chart, log], scroll=ft.ScrollMode.AUTO), expand=2, padding=10)
         ], expand=True)
     )
 
