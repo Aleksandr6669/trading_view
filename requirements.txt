@@ -1,7 +1,7 @@
-flet==0.27.6,
-pandas,
-pandas_ta,
-plotly,
-python-binance,
-requests,
-kaleido,
+flet==0.27.6
+pandas
+pandas_ta
+plotly
+python-binance
+requests
+kaleido
