@@ -11,7 +11,7 @@ dependencies = [
   "flet==0.27.6",
   "pandas",
   "pandas_ta",
-  "plotly",
+  "plotly==6.0.1",
   "python-binance",
   "requests",
   "kaleido",

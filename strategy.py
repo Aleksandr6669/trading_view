@@ -4,8 +4,8 @@ df["ema50"] = ta.ema(df["close"], length=50)
 df["slope"] = df["ema50"].diff()
 
 # Диапазон колебаний
-df["range_high"] = df["close"].rolling(50).max()
-df["range_low"] = df["close"].rolling(50).min()
+df["range_high"] = df["close"].rolling(30).max()
+df["range_low"] = df["close"].rolling(30).min()
 
 # Определяем тренд по наклону
 slope = df["slope"].iloc[-1]
