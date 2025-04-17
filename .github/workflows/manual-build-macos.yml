@@ -20,8 +20,9 @@ jobs:
     - name: Install Python dependencies
       run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
           pip install flet
+          pip install -r requirements.txt
+          
 
     - name: 🔍 Проверка plotly
       run: python -c "import plotly; print('✅ Plotly version:', plotly.__version__)"
