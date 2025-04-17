@@ -1,1 +1,1 @@
-{"symbol": "XRPUSDT", "interval": "5m", "market_type": "futures", "limit": 100, "refresh_interval": 1}
+{"symbol": "ETHUSDT", "interval": "30m", "market_type": "futures", "limit": 70, "refresh_interval": 5}
