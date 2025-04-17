@@ -15,14 +15,20 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: '3.10'
+        python-version: '3.9'
     
     - name: Install Python dependencies
       run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install flet
+
+    - name: 🔍 Проверка plotly
+      run: python -c "import plotly; print('✅ Plotly version:', plotly.__version__)"
+    
   
+    - name: 📃 Show installed packages
+      run: pip freeze
 
     - name: Build macOS App
       run: flet build macos  # Команда для сборки .app

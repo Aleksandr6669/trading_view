@@ -5,7 +5,5 @@ pandas_ta==0.3.14b0
 python-binance==1.0.28
 requests==2.32.3
 kaleido==0.2.1
-typing-extensions>=4.5.0
 numpy==1.23.5
 scipy>=1.10.0
-
